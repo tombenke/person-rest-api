@@ -1,0 +1,49 @@
+{
+  "name": "person-rest-api",
+  "description": "This is the specification of the person REST API endpoints",
+  "version": "1.0.0",
+  "tags": [
+    "REST",
+    "swagger",
+    "micro-services",
+    "person",
+    "web"
+  ],
+  "author": {
+    "name": "Tamás Benke",
+    "email": "tombenke@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/tombenke/person-rest-api/issues"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/tombenke/person-rest-api/blob/master/LICENSE"
+  },
+  "homepage": "https://github.com/tombenke/person-rest-api",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/tombenke/person-rest-api.git"
+  },
+  "dependencies": {
+    "redoc-cli": "^0.8.4"
+  },
+  "devDependencies": {
+    "husky": "^2.3.0",
+    "prettier": "^1.17.1",
+    "swagger-cli": "^2.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier && npm run swagger"
+    }
+  },
+  "scripts": {
+    "test": "echo No tests defined!",
+    "clean": "rm dist/* -fr",
+    "prepublishOnly": "npm run swagger && npm run prettier",
+    "prettier": "prettier --single-quote --write 'rest-api/**/*.{js,jsx,ts,tsx,json,css,scss,md,yml}'",
+    "swagger": "swagger-cli validate rest-api/api.yml && swagger-cli bundle rest-api/api.yml -o docs/swagger.json && redoc-cli bundle rest-api/api.yml -o docs/redoc-static.html",
+    "all": "npm run swagger && npm run prettier"
+  }
+}

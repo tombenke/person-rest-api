@@ -1,0 +1,22 @@
+#$schema: "http://json-schema.org/draft-04/schema#"
+title: The person request body
+description: The description of the person selected by its ID
+example:
+  id: '2a1152ee-4d77-4ff4-a811-598555937625'
+  familyName: 'Skywalker'
+  givenName: 'Luke'
+type: object
+properties:
+  id:
+    type: string
+    description: The unique ID of the person
+  familyName:
+    type: string
+    description: The family-name of the person
+  givenName:
+    type: string
+    description: The given-name of the person
+required:
+  - id
+  - familyName
+  - givenName

@@ -1,0 +1,15 @@
+#$schema: "http://json-schema.org/draft-04/schema#"
+title: The POST /persons request body
+example:
+  $ref: ./post-persons-request.yml
+description: The description of the person to be created
+type: object
+properties:
+  familyName:
+    type: string
+    description: The family-name of the person
+  givenName:
+    type: string
+    description: The given-name of the person
+required:
+  - familyName

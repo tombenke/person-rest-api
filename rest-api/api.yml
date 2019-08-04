@@ -1,0 +1,39 @@
+swagger: '2.0'
+
+info:
+  title: person-rest-api
+  description: This is the specification of the person REST API endpoints.
+  version: '1.0'
+  contact:
+    name: person-rest-api
+    url: 'http://localhost:3007'
+    email: 'tombenke@gmail.com'
+
+schemes:
+  - http
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+host: localhost
+basePath: /
+
+tags:
+  - name: persons
+    description: Manage the persons
+
+  - name: swagger
+    description: Static JSON format swagger file. Contains the specification of all endpoints provided by the persons.
+
+paths:
+  # `person-api` endpoints
+  /persons:
+    $ref: persons/endpoint.yml
+  /persons/{personId}:
+    $ref: persons/person/endpoint.yml
+
+  # Static content service for swagger.json
+  /api-docs/:
+    $ref: api-docs/endpoint.yml

@@ -1,0 +1,61 @@
+#/persons/{systemId}:
+get:
+  tags:
+    - persons
+  summary: Get one Person
+  description: Get one Person
+
+  produces:
+    - application/json
+  parameters:
+    - in: path
+      name: personId
+      description: The unique ID of the person to retrieve
+      type: string
+      required: true
+      x-example: '2a1152ee-4d77-4ff4-a811-598555937625'
+  responses:
+    200:
+      description: OK
+      schema:
+        $ref: person-schema.yml
+      examples:
+        application/json:
+          $ref: get-person-response.yml
+  deprecated: false
+
+put:
+  tags:
+    - persons
+  summary: Update a Person
+  description: Update a Person
+
+  operationId: person.put
+  produces:
+    - application/json
+  parameters:
+    - in: path
+      name: personId
+      description: The unique ID of the person to update
+      type: string
+      required: true
+      x-example: '2a1152ee-4d77-4ff4-a811-598555937625'
+    - in: body
+      name: person
+      description: The person parameters
+      required: true
+      schema:
+        $ref: person-request-schema.yml
+  responses:
+    200:
+      description: OK
+      schema:
+        $ref: person-schema.yml
+      examples:
+        application/json:
+          $ref: put-person-response.yml
+    400:
+      description: Missing or invalid parameters
+      schema:
+        $ref: ../../400-response-schema.yml
+  deprecated: false

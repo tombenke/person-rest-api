@@ -1,0 +1,21 @@
+#$schema: "http://json-schema.org/draft-04/schema#"
+title: The GET /persons response body
+description: The list of persons
+type: array
+items:
+  type: object
+  description: A person descriptor
+  properties:
+    id:
+      type: string
+      description: The unique ID of the person
+    familyName:
+      type: string
+      description: The family-name of the person
+    givenName:
+      type: string
+      description: The given-name of the person
+  required:
+    - id
+    - familyName
+    - givenName
