@@ -26,24 +26,22 @@
     "url": "http://github.com/tombenke/person-rest-api.git"
   },
   "dependencies": {
-    "redoc-cli": "^0.8.4"
+    "easer": "^6.0.5",
+    "redoc-cli": "^0.13.10"
   },
   "devDependencies": {
-    "husky": "^2.3.0",
-    "prettier": "^1.17.1",
-    "swagger-cli": "^2.2.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run prettier && npm run swagger"
-    }
+    "prettier": "^2.6.2",
+    "@apidevtools/swagger-cli": "^4.0.4"
   },
   "scripts": {
     "test": "echo No tests defined!",
-    "clean": "rm dist/* -fr",
+    "clean": "rm docs/* -fr",
     "prepublishOnly": "npm run swagger && npm run prettier",
     "prettier": "prettier --single-quote --write 'rest-api/**/*.{js,jsx,ts,tsx,json,css,scss,md,yml}'",
-    "swagger": "swagger-cli validate rest-api/api.yml && swagger-cli bundle rest-api/api.yml -o docs/swagger.json && redoc-cli bundle rest-api/api.yml -o docs/redoc-static.html",
-    "all": "npm run swagger && npm run prettier"
+    "swagger-validate": "swagger-cli validate rest-api/api.yml",
+    "swagger-bundle": "swagger-cli bundle rest-api/api.yml -o docs/swagger.json && redoc-cli build rest-api/api.yml -o docs/index.html",
+    "all": "npm run prettier && npm run swagger-validate && npm run swagger-bundle",
+    "mock-server-static": "easer -r ./rest-api/api.yml -n nats://localhost:4222 --pdmsTopic oom-demo -m",
+    "mock-server-pdms": "easer -r ./rest-api/api.yml -n nats://localhost:4222 --pdmsTopic oom-demo -u"
   }
 }

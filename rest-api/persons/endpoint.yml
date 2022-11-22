@@ -4,51 +4,51 @@ get:
     - persons
   summary: List all the Persons
   description: List all the Persons
-  produces:
-    - application/json
+  parameters: []
   responses:
     200:
       description: OK
-      schema:
-        $ref: get-persons-response-schema.yml
-      examples:
-        application/json:
-          $ref: get-persons-response.yml
+      content:
+        'application/json':
+          schema:
+            $ref: get-persons-response-schema.yml
+          example:
+            $ref: get-persons-response.yml
   deprecated: false
 post:
   tags:
     - persons
   summary: Create a new instance of Person
   description: Create a new instance of Person
-  produces:
-    - application/json
-  parameters:
-    - in: body
-      name: persons
-      description: The person object to create
-      required: true
-      schema:
-        $ref: post-persons-request-schema.yml
+  requestBody:
+    description: The person object to create
+    content:
+      'application-json':
+        schema:
+          $ref: post-persons-request-schema.yml
+        example:
+          $ref: ./post-persons-request.yml
   responses:
     200:
       description: OK
-      schema:
-        $ref: post-persons-response-schema.yml
-      examples:
-        application/json:
-          $ref: post-persons-response.yml
+      content:
+        'application/json':
+          schema:
+            $ref: post-persons-response-schema.yml
+          example:
+            $ref: post-persons-response.yml
     400:
       description: Missing or invalid parameters
-      schema:
-        $ref: ../400-response-schema.yml
+      content:
+        'application/json':
+          schema:
+            $ref: ../400-response-schema.yml
   deprecated: false
 delete:
   tags:
     - persons
   summary: Deletes all the Persons
   description: Deletes all the Persons
-  produces:
-    - application/json
   responses:
     204:
       description: No Content

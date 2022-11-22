@@ -3,12 +3,9 @@ person-rest-api
 
 ## About
 
-The specification of REST API endpoints of a simple person service.
+The JavaScript implementation of REST API endpoints of a simple person service.
 
-This repository holds only the definitions of the REST endpoints
-which the person-service backend has to provide to its clients.
-
-Note: This repository is made for demonstration purposes to the [easer server](http://github.com/easer).
+Note: This repository is made for demonstration purposes to the [easer server](http://github.com/tombenke/easer).
 
 ## Artifacts
 

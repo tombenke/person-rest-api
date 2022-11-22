@@ -1,0 +1,144 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  APPNAME: person-rest-api
+  DEP: ./...
+  DOCKER_REG_PREFIX: ghcr.io
+  OWNER: tombenke
+  DOCKER_REG_USER: tombenke
+  VERSION:
+    sh: git describe --tags --always  --abbrev=0 --match v* ${GITHUB_REF} | sed -e 's,.*/\(.*\),\1,'  | sed -e 's/^v//' || "latest"
+  IMAGE_TAG: "{{.VERSION}}"
+  DOCKER_IMAGE_NAME: "{{.DOCKER_REG_PREFIX}}/{{.OWNER}}/{{.APPNAME}}:{{.IMAGE_TAG}}"
+  GIT_HOOKS_DIR:
+    sh: sh -c 'echo "$(pwd)/.git/hooks"'
+  REST_API_PATH: ./rest-api/api.yml
+  NATS_URI: nats://localhost:4222
+  PDMS_TOPIC: person-demo
+  USE_PDMS: true
+  #EASER: node_modules/easer/dist/app.js
+  EASER: /home/tombenke/topics/easer/dist/app.js
+
+env:
+  PDMS_CLUSTER_ID: easer-tutorial-cluster
+  PDMS_CLIENT_ID: easer-tutorial-client
+  NATS_DEBUG: true
+
+tasks:
+  default:
+    desc: Executes all the tests then build the artifacts
+    cmds:
+      - task: format
+      - task: lint
+      - task: dockerfile-lint
+      - task: test
+      - task: build
+
+  format:
+    desc: Autoformat the source files
+    cmds:
+      - npm run prettier
+
+  test:
+    desc: Test the REST endpoints and the consistency of mock data
+    cmds:
+      - task: format
+      # task: nats-upd
+      - npm run test
+      # task: nats-down
+
+  lint:
+    desc: Validate the swagger files
+    cmds:
+      - npm run swagger-validate
+
+  dockerfile-lint:
+    desc: Run the dockerfile linter
+    cmds:
+      - docker run --rm -i hadolint/hadolint < Dockerfile
+
+  build:
+    desc: Generate the swagger.json, and the documentation, then bundle it.
+    cmds:
+      - npm run swagger-bundle
+
+  pre-commit:
+    desc: Runs the QA tasks from a git pre-commit hook
+    cmds:
+      - task: lint
+      - task: dockerfile-lint
+      - task: test
+      - task: build
+
+  install-git-hooks:
+    desc: Install git hooks
+    cmds:
+      - echo -e "#!/bin/bash\ntask pre-commit" > ./.git/hooks/pre-commit
+      - chmod ug+x {{.GIT_HOOKS_DIR}}/pre-commit
+
+  install:
+    desc: Install the package and its dependencies
+    cmds:
+      - npm install
+      - npm audit fix --force || echo "Install completed"
+      - task: install-git-hooks
+
+  clean:
+    desc: Clean temporary files and folders
+    cmds:
+      - npm run clean
+
+  nats-up:
+    desc: Start NATS
+    cmds:
+      - docker-compose -f docker-compose.nats.yml up
+
+  nats-upd:
+    desc: Start NATS in the background
+    cmds:
+      - docker-compose -f docker-compose.nats.yml up -d
+
+  nats-down:
+    desc: Stop and remove NATS
+    cmds:
+      - docker-compose -f docker-compose.nats.yml down --volume
+
+  start-mock-server-static:
+    desc: Start easer
+    cmds:
+      - |
+        {{.EASER}} \
+          -r {{.REST_API_PATH}} \
+          -n {{.NATS_URI}} \
+          -m \
+          --dumpConfig \
+          -l debug \
+
+  start-mock-server-dynamic:
+    desc: Start easer with NATS
+    cmds:
+      - task: nats-upd
+      - |
+        {{.EASER}} \
+          -r {{.REST_API_PATH}} \
+          -u {{.USE_PDMS}} \
+          -n {{.NATS_URI}} \
+          -m \
+          --dumpConfig \
+          -l debug \
+
+  build-docker:
+    desc: Build docker image
+    cmds:
+      - echo {{.VERSION}}
+      - echo {{.IMAGE_TAG}}
+      - echo {{.DOCKER_IMAGE_NAME}}
+      - docker build -t {{.DOCKER_IMAGE_NAME}} .
+
+  push-docker:
+    desc: Push docker image
+    cmds:
+      - echo {{.DOCKER_IMAGE_NAME}}
+      - docker push {{.DOCKER_IMAGE_NAME}}

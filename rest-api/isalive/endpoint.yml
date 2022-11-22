@@ -1,10 +1,10 @@
-#/api-docs:
+#/isalive:
 get:
   tags:
-    - 'swagger'
-  summary: Responses the files from the directory defined by the contentPath property
+    - isalive
+  summary: Used by kubernetes liveness and readiness probes
   x-static:
-    contentPath: ./docs/
+    contentPath: ./isalive/
     config:
       dotfiles: allow
       index: true

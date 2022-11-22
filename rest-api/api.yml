@@ -1,4 +1,4 @@
-swagger: '2.0'
+openapi: '3.0.3'
 
 info:
   title: person-rest-api
@@ -9,23 +9,15 @@ info:
     url: 'http://localhost:3007'
     email: 'tombenke@gmail.com'
 
-schemes:
-  - http
-
-consumes:
-  - application/json
-produces:
-  - application/json
-
-host: localhost
-basePath: /
-
 tags:
   - name: persons
     description: Manage the persons
 
   - name: swagger
     description: Static JSON format swagger file. Contains the specification of all endpoints provided by the persons.
+
+  - name: isalive
+    description: Used by kubernetes liveness and readiness probes
 
 paths:
   # `person-api` endpoints
@@ -37,3 +29,7 @@ paths:
   # Static content service for swagger.json
   /api-docs/:
     $ref: api-docs/endpoint.yml
+
+  # Static content service for kubernetes health check
+  /isalive:
+    $ref: isalive/endpoint.yml
